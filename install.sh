@@ -311,7 +311,7 @@ install_aur() {
   sh_c mkdir -p "$CACHE_DIR/code-server-aur"
   sh_c "curl -#fsSL https://aur.archlinux.org/cgit/aur.git/snapshot/code-server.tar.gz | tar -xzC $CACHE_DIR/code-server-aur --strip-components 1"
   echo "+ cd $CACHE_DIR/code-server-aur"
-  if sh_f [ ! "${DRY_RUN-}" ]; then
+  if [ ! "${DRY_RUN-}" ]; then
     cd "$CACHE_DIR/code-server-aur"
   fi
   sh_c makepkg -si
@@ -455,7 +455,11 @@ command_exists() {
 }
 
 sh_c() {
-  echoh "+ $*"
+  if [ "$SSH_ARGS" ]; then
+    echoh "+ ssh "$SSH_ARGS" $*"
+  else
+    echoh "+ $*"
+  fi
   if [ ! "${DRY_RUN-}" ]; then
     sh_f "$@"
   fi
